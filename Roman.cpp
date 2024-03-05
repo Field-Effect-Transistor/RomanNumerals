@@ -25,6 +25,3 @@ Roman::Roman(const char*  RomanNumber){
             --roman[*ptr];
 
 }
-
-    Roman::Roman(std::string RomanNumber): Roman(RomanNumber.c_str());
-    Roman::Roman(): Roman(nullptr);

@@ -23,7 +23,6 @@ class Roman
 
     public:
     Roman(const char*  RomanNumber);
-    Roman(std::string RomanNumber): Roman(RomanNumber.c_str()) {};
     Roman(): Roman(nullptr) {};
 
     ~Roman() {};
