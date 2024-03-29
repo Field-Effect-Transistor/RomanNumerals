@@ -4,14 +4,13 @@
 int main(void)
 {
 
-    const char* test = "XIX";
+    const char* test = "XXI";
     Roman roman(test);
-    std::cout << roman.roman['I'] << std::endl;
-    std::cout << roman.roman['V'] << std::endl;
-    std::cout << roman.roman['X'] << std::endl;
-    std::cout << roman.roman['L'] << std::endl;
-    std::cout << roman.roman['C'] << std::endl;
-    std::cout << roman.roman['D'] << std::endl;
-    std::cout << roman.roman['M'] << std::endl;
+    
+    Roman clone(roman);
+    
+    std::cout << roman.getIntegerView() << std::endl;
+    std::cout << clone.getStringView() << std::endl;
+
     return 0;
 }
