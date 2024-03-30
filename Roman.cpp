@@ -1,6 +1,9 @@
 #pragma once
+
 #include "Roman.hpp"
+
 #define ABS(x) ((x) < 0 ? -(x) : (x))
+
 /**
  * Returns the price associated with the given Roman numeral character.
  * @param c the Roman numeral character
@@ -44,13 +47,8 @@ Roman::Roman(const char*  romanNumber){
 }
 
 Roman::Roman(const Roman& parent){
-    letterCounts[0] = parent.letterCounts[0];
-    letterCounts[1] = parent.letterCounts[1];
-    letterCounts[2] = parent.letterCounts[2];
-    letterCounts[3] = parent.letterCounts[3];
-    letterCounts[4] = parent.letterCounts[4];
-    letterCounts[5] = parent.letterCounts[5];
-    letterCounts[6] = parent.letterCounts[6];
+    for(int i = 0; i < 7; ++i)
+        this->letterCounts[i] = parent.letterCounts[i];
 }
 
 unsigned int Roman::getIntegerView(){
@@ -63,20 +61,49 @@ unsigned int Roman::getIntegerView(){
 }
 
 const char* Roman::getStringView(){
+    Roman clone(*this);
+
     unsigned int size = 0;
-    for(auto letterCount: letterCounts)
+    for(auto letterCount: clone.letterCounts)
         size += ABS(letterCount);
     
     char* result = new char[size + 1];
     result[size] = '\0';
     
+    unsigned int currPos = size - 1;
+    for(auto ptr = clone.letters; *ptr != '\0'; ++ptr){
+        if(clone.letterCounts[getLetterPosition(*ptr)] > 0)
+            for(int i = 0; i < clone.letterCounts[getLetterPosition(*ptr)]; ++i)
+                result[currPos--] = *ptr;
+        if(clone.letterCounts[getLetterPosition(*ptr)] < 0){
+            for(auto ptr1 = ptr + 1; *ptr1 != '\0'; ++ptr1)
+                if(clone.letterCounts[getLetterPosition(*ptr1)] > 0){
+                --clone.letterCounts[getLetterPosition(*ptr1)];
+                result[currPos--] = *ptr1;
+                break;
+            }
+            result[currPos--] = *ptr;
+        }//*/
+    }
+
     return result;
 }
 
 std::ostream& operator<<(std::ostream& os, const Roman& roman){
-    for(int i = 6; i >= 0; --i)
-        for(int j = 0; j < roman.letterCounts[i]; ++j)
-            os << roman.letters[i];
+    Roman temp(roman);
+    return os << temp.getStringView();
+}
 
-    return os;
+std::istream& operator>>(std::istream& is, Roman& roman){
+    std::string str;
+    is >> str;
+    roman = Roman(str.c_str());
+    return is;
+}
+
+
+const Roman& Roman::operator=(const Roman& parent){
+    for(int i = 0; i < 7; ++i)
+        this->letterCounts[i] = parent.letterCounts[i];
+    return *this;
 }
