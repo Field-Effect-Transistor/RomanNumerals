@@ -203,7 +203,7 @@ const bool operator<(const Roman& expression1, const Roman& expression2){
     return false;
 }
 const bool operator<=(const Roman& expression1, const Roman& expression2){
-    return !(expression1 > expression2);
+    return !(expression2 < expression1);
 }
 const bool operator>(const Roman& expression1, const Roman& expression2){
     return expression2 < expression1;
