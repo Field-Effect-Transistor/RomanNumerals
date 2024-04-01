@@ -11,7 +11,14 @@ int main(void)
     
     //Roman clone = roman;
     
-    std::cout << Roman(4) + Roman(9) << std::endl;
+    for(int i = -2; i < 3; ++i)
+        for(int j = -2; j < 3; ++j)
+            std::cout << i << " , " << j <<':'<< std::endl
+                    << "==\t" << (Roman(i) == Roman(j)) << std::endl
+                    << "!=\t" << (Roman(i) != Roman(j)) << std::endl
+                    << ">\t" << (Roman(i) > Roman(j)) << std::endl
+                    << "<\t" << (Roman(i) < Roman(j)) << std::endl
+                    << std::endl;
 
     return 0;
 }

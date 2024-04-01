@@ -3,6 +3,7 @@
 #include "Roman.hpp"
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
+#define SIGN(x) ((x) < 0 ? true : false)
 
 inline short int getPrice(const char c){
     switch(c){
@@ -47,7 +48,8 @@ Roman::Roman(const char*  romanNumber){
     }
 }
 
-Roman::Roman(unsigned int integer){
+Roman::Roman(unsigned int integer, bool SF){
+    this->SF = SF;
     for(auto ptr = letters + 6; ptr >= letters; --ptr)
         if(integer >= getPrice(*ptr)){
             letterCounts[getLetterPosition(*ptr)] = integer / getPrice(*ptr);
@@ -167,7 +169,45 @@ Roman operator+(const Roman& summand1, const Roman& summand2){
             sum.letterCounts[i] += summand2.letterCounts[i];
         sum.normalize();
         return sum;
-    }
+    } else {
+        Roman temp1(summand1), temp2(summand2);
 
+    }
     return Roman();
+}
+
+const bool operator==(const Roman& expression1, const Roman& expression2){
+    if(expression1.SF != expression2.SF)
+        return false;
+
+    for(int i = 0; expression1.letters[i] != '\0'; ++i)
+        if(expression1.letterCounts[i] != expression2.letterCounts[i])
+            return false;
+    return true;
+}
+
+const bool operator!=(const Roman& expression1, const Roman& expression2){
+    return !(expression1 == expression2);
+}
+const bool operator<(const Roman& expression1, const Roman& expression2){
+    if(expression1.SF > expression2.SF)
+        return true;
+    if(expression1.SF < expression2.SF)
+        return false;
+    for(int i = sizeof(expression1.letterCounts) / sizeof(int) - 1; i >= 0; --i){
+        if(expression1.letterCounts[i] < expression2.letterCounts[i])
+            return true ^ expression1.SF;
+        if(expression1.letterCounts[i] > expression2.letterCounts[i])
+            return false ^ expression1.SF;
+    }
+    return false;
+}
+const bool operator<=(const Roman& expression1, const Roman& expression2){
+    return !(expression1 > expression2);
+}
+const bool operator>(const Roman& expression1, const Roman& expression2){
+    return expression2 < expression1;
+}
+const bool operator>=(const Roman& expression1, const Roman& expression2){
+    return !(expression1 < expression2);
 }
