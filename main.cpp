@@ -6,14 +6,13 @@ int main(void)
 {
 
     //const char* test = "XIV";
-    Roman roman;
-
-    std::cin >> roman;
+    Roman roman(1);
+    Roman roman1(9);
+    //std::cin >> roman;
     
     Roman clone = roman;
     
-    std::cout << roman << std::endl;
-    std::cout << clone.getStringView() << std::endl;
+    std::cout << roman - roman1 << std::endl;
 
     return 0;
 }

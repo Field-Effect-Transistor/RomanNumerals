@@ -4,11 +4,6 @@
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
-/**
- * Returns the price associated with the given Roman numeral character.
- * @param c the Roman numeral character
- * @return the price associated with the Roman numeral character
- */
 inline short int getPrice(const char c){
     switch(c){
         case 'I': return pI;
@@ -36,14 +31,22 @@ inline short int getLetterPosition(const char c){
 }
 
 Roman::Roman(const char*  romanNumber){
-    if(romanNumber == nullptr)
-        return;
-   for(auto ptr = romanNumber; *ptr != '\0'; ++ptr){
-        if(getPrice(*ptr) >= getPrice(*(ptr + 1)))
-            ++letterCounts[getLetterPosition(*ptr)];
-        else
-            --letterCounts[getLetterPosition(*ptr)];
-   }
+    if(romanNumber != nullptr)
+        for(auto ptr = romanNumber; *ptr != '\0'; ++ptr){
+                if(getPrice(*ptr) >= getPrice(*(ptr + 1)))
+                    ++letterCounts[getLetterPosition(*ptr)];
+                else
+                    --letterCounts[getLetterPosition(*ptr)];
+        }
+    normalize();
+}
+
+Roman::Roman(unsigned int integer){
+    for(auto ptr = letters + 6; ptr >= letters; --ptr)
+        if(integer >= getPrice(*ptr)){
+            letterCounts[getLetterPosition(*ptr)] = integer / getPrice(*ptr);
+            integer %= getPrice(*ptr);
+        }
 }
 
 Roman::Roman(const Roman& parent){
@@ -102,8 +105,38 @@ std::istream& operator>>(std::istream& is, Roman& roman){
 }
 
 
-const Roman& Roman::operator=(const Roman& parent){
+const Roman Roman::operator=(const Roman& parent){
     for(int i = 0; i < 7; ++i)
         this->letterCounts[i] = parent.letterCounts[i];
     return *this;
+}
+
+void Roman::normalize(){
+    int temp;
+    for(int i = 0; letters[i + 1] != '\0'; ++i){
+        if(temp = (letterCounts[i] * getPrice(letters[i])) / getPrice(letters[i + 1])){
+            letterCounts[i + 1] += temp;
+            letterCounts[i] = (letterCounts[i] * getPrice(letters[i])) % getPrice(letters[i + 1]) / getPrice(letters[i]);
+        }
+        if(letterCounts[i] >= 4 - 2 * (i % 2)){
+            letterCounts[i] = -1;
+            letterCounts[i + 1] += 1;
+        }
+    }
+}
+
+Roman operator-(const Roman& decreasing, const Roman& denominator){
+    Roman difference(decreasing);
+    for(int i = 0; i < sizeof(difference.letterCounts) / sizeof(difference.letterCounts[0]); ++i)
+        difference.letterCounts[i] -= denominator.letterCounts[i];
+    difference.normalize();
+    return difference;
+}
+
+Roman operator+(const Roman& summand1, const Roman& summand2){
+    Roman sum(summand1);
+    for(int i = 0; i < sizeof(sum.letterCounts) / sizeof(sum.letterCounts[0]); ++i)
+        sum.letterCounts[i] += summand2.letterCounts[i];
+    sum.normalize();
+    return sum;
 }

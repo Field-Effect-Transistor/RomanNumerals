@@ -11,8 +11,16 @@ inline short int getPrice(const char c);
 
 class Roman
 {
-    public:
+private:
+//public:
+    const char* letters = "IVXLCDM";
+    int letterCounts[7] = {0, 0, 0, 0, 0, 0, 0};
+
+    void normalize(void);
+
+public:
     Roman(const char*  romanNumber);
+    Roman(unsigned int integer);
     Roman(): Roman(nullptr) {};
     Roman(const Roman& parent);
     ~Roman() {};
@@ -20,13 +28,9 @@ class Roman
     unsigned int getIntegerView();
     const char* getStringView();
 
-    public:
-    private:
-    const char* letters = "IVXLCDM";
-    int letterCounts[7] = {0, 0, 0, 0, 0, 0, 0};
-
-    protected:
     friend std::ostream& operator<<(std::ostream& os, const Roman& roman);
     friend std::istream& operator>>(std::istream& is, Roman& roman);
-    const Roman& operator=(const Roman& parent);
+    const Roman operator=(const Roman& parent);
+    friend Roman operator-(const Roman& decreasing, const Roman& denominator);
+    friend Roman operator+(const Roman& summand1, const Roman& summand2);
 };
