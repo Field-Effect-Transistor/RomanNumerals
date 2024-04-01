@@ -126,6 +126,17 @@ const Roman Roman::operator=(const Roman& parent){
 void Roman::normalize(){
     int temp;
     for(int i = 0; letters[i + 1] != '\0'; ++i){
+        if(letterCounts[i] == -2){
+            int j = i + 1;
+            while(letterCounts[j] < 1)
+                ++j;
+            for(; j > i; --j){
+                --letterCounts[j];
+                letterCounts[j - 1] += 2 + (j % 2) * 3;
+            }
+
+
+        }
         if(temp = (letterCounts[i] * getPrice(letters[i])) / getPrice(letters[i + 1])){
             letterCounts[i + 1] += temp;
             letterCounts[i] = (letterCounts[i] * getPrice(letters[i])) % getPrice(letters[i + 1]) / getPrice(letters[i]);
@@ -145,6 +156,8 @@ Roman operator-(const Roman& decreasing, const Roman& denominator){
         difference.normalize();
         return difference;
     }
+
+    return Roman();
 }
 
 Roman operator+(const Roman& summand1, const Roman& summand2){
@@ -155,4 +168,6 @@ Roman operator+(const Roman& summand1, const Roman& summand2){
         sum.normalize();
         return sum;
     }
+
+    return Roman();
 }

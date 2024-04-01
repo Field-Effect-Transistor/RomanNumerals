@@ -5,14 +5,13 @@
 int main(void)
 {
 
-    //const char* test = "XIV";
-    Roman roman("-XIV");
-    Roman roman1(9);
+    //const char* test = "";
+
     //std::cin >> roman;
     
     //Roman clone = roman;
     
-    std::cout << roman << std::endl;
+    std::cout << Roman(4) + Roman(9) << std::endl;
 
     return 0;
 }
