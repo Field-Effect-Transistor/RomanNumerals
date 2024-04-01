@@ -31,14 +31,20 @@ inline short int getLetterPosition(const char c){
 }
 
 Roman::Roman(const char*  romanNumber){
-    if(romanNumber != nullptr)
-        for(auto ptr = romanNumber; *ptr != '\0'; ++ptr){
-                if(getPrice(*ptr) >= getPrice(*(ptr + 1)))
-                    ++letterCounts[getLetterPosition(*ptr)];
-                else
-                    --letterCounts[getLetterPosition(*ptr)];
+    if(romanNumber != nullptr){
+        const char* ptr = romanNumber;
+        if(*ptr == '-' && *ptr != '\0'){
+            SF = true;
+            ++ptr;
+        } 
+        for(; *ptr != '\0'; ++ptr){
+            if(getPrice(*ptr) >= getPrice(*(ptr + 1)))
+                ++letterCounts[getLetterPosition(*ptr)];
+            else
+                --letterCounts[getLetterPosition(*ptr)];
         }
     normalize();
+    }
 }
 
 Roman::Roman(unsigned int integer){
@@ -47,9 +53,11 @@ Roman::Roman(unsigned int integer){
             letterCounts[getLetterPosition(*ptr)] = integer / getPrice(*ptr);
             integer %= getPrice(*ptr);
         }
+    normalize();
 }
 
 Roman::Roman(const Roman& parent){
+    SF = parent.SF;
     for(int i = 0; i < 7; ++i)
         this->letterCounts[i] = parent.letterCounts[i];
 }
@@ -69,8 +77,12 @@ const char* Roman::getStringView(){
     unsigned int size = 0;
     for(auto letterCount: clone.letterCounts)
         size += ABS(letterCount);
-    
+    if(clone.SF)
+        size += 1;
+
     char* result = new char[size + 1];
+    if(clone.SF)
+        result[0] = '-';
     result[size] = '\0';
     
     unsigned int currPos = size - 1;
@@ -86,7 +98,7 @@ const char* Roman::getStringView(){
                 break;
             }
             result[currPos--] = *ptr;
-        }//*/
+        }
     }
 
     return result;
@@ -134,9 +146,13 @@ Roman operator-(const Roman& decreasing, const Roman& denominator){
 }
 
 Roman operator+(const Roman& summand1, const Roman& summand2){
+//    if(summand1.SF == summand2.SF)
+
+/*
     Roman sum(summand1);
     for(int i = 0; i < sizeof(sum.letterCounts) / sizeof(sum.letterCounts[0]); ++i)
         sum.letterCounts[i] += summand2.letterCounts[i];
     sum.normalize();
     return sum;
+//*/
 }

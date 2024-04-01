@@ -12,10 +12,10 @@ inline short int getPrice(const char c);
 class Roman
 {
 private:
-//public:
+public:
     const char* letters = "IVXLCDM";
     int letterCounts[7] = {0, 0, 0, 0, 0, 0, 0};
-
+    bool SF = false;
     void normalize(void);
 
 public:
