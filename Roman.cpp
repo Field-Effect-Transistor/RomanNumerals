@@ -138,21 +138,21 @@ void Roman::normalize(){
 }
 
 Roman operator-(const Roman& decreasing, const Roman& denominator){
-    Roman difference(decreasing);
-    for(int i = 0; i < sizeof(difference.letterCounts) / sizeof(difference.letterCounts[0]); ++i)
-        difference.letterCounts[i] -= denominator.letterCounts[i];
-    difference.normalize();
-    return difference;
+    if(decreasing.SF == denominator.SF){
+        Roman difference(decreasing);
+        for(int i = 0; i < sizeof(difference.letterCounts) / sizeof(difference.letterCounts[0]); ++i)
+            difference.letterCounts[i] -= denominator.letterCounts[i];
+        difference.normalize();
+        return difference;
+    }
 }
 
 Roman operator+(const Roman& summand1, const Roman& summand2){
-//    if(summand1.SF == summand2.SF)
-
-/*
-    Roman sum(summand1);
-    for(int i = 0; i < sizeof(sum.letterCounts) / sizeof(sum.letterCounts[0]); ++i)
-        sum.letterCounts[i] += summand2.letterCounts[i];
-    sum.normalize();
-    return sum;
-//*/
+    if(summand1.SF == summand2.SF){
+        Roman sum(summand1);
+        for(int i = 0; i < sizeof(sum.letterCounts) / sizeof(sum.letterCounts[0]); ++i)
+            sum.letterCounts[i] += summand2.letterCounts[i];
+        sum.normalize();
+        return sum;
+    }
 }
